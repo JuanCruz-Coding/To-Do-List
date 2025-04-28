@@ -14,7 +14,26 @@ document.addEventListener("DOMContentLoaded", function() {
         if (tareaTexto !== "") {
             // Crear un nuevo elemento de lista
             const nuevaTarea = document.createElement("li");
-            nuevaTarea.textContent = tareaTexto;    
+            const tareaCompletada = document.createElement("button")
+            const eliminarTarea = document.createElement("button")
+
+            tareaCompletada.textContent = "✔️"
+            tareaCompletada.addEventListener("click", function() {
+                nuevaTarea.classList.toggle("text-decoration-line-through")
+            });
+
+            eliminarTarea.textContent = "🗑"
+            eliminarTarea.classList.add("eliminar-tarea")
+            eliminarTarea.addEventListener("click", function() {
+                listaTareas.removeChild(nuevaTarea);
+            });
+
+            nuevaTarea.textContent =tareaTexto + " - " + new Date().toLocaleString("es-ES", { timeZone: "America/Argentina/Buenos_Aires" });
+
+           
+
+            nuevaTarea.appendChild(tareaCompletada)
+            nuevaTarea.appendChild(eliminarTarea)
 
             // agregar el <li> a la lista
             listaTareas.appendChild(nuevaTarea);
