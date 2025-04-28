@@ -1,3 +1,5 @@
+
+
 // Esperar a que la página cargue completamente
 document.addEventListener("DOMContentLoaded", function() {
     
@@ -20,7 +22,12 @@ document.addEventListener("DOMContentLoaded", function() {
             // Limpiar el campo de entrada
             inputTarea.value = "";
         } else {
-            alert("Por favor, ingresa una tarea.");
+            Swal.fire({
+                title: 'Error!',
+                text: 'No se puede agregar una tarea vacía',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              })
         }
     }
 
