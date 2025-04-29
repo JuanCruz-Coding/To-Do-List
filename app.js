@@ -7,39 +7,69 @@ document.addEventListener("DOMContentLoaded", function() {
     agregarBtn = document.getElementById("agregar-btn");
     listaTareas = document.getElementById("lista-tareas");
 
+    let tareas = [];
+
+    // Cargar tareas desde el localStorage al cargar la página
+    function cargarTareas() {
+        const datosGuardados = localStorage.getItem("tareas");
+        if (datosGuardados) {
+            tareas = JSON.parse(datosGuardados);
+            tareas.forEach(tarea => {
+                crearElementoTarea(tarea.texto, tarea.completada);
+            });
+        }
+    }
+
+    // Guardar tareas en el localStorage
+    function guardarTareas() {
+        localStorage.setItem("tareas", JSON.stringify(tareas));
+    }
+
+    // crear un <li> en el DOM
+    function crearElementoTarea(texto, completada = false) {
+        const nuevaTarea = document.createElement("li");
+        const spanTexto = document.createElement("span");
+        const botonEliminar = document.createElement("button");
+
+        spanTexto.textContent = texto;
+        botonEliminar.textContent = "🗑";
+
+        if(completada) {
+            nuevaTarea.classList.add("completada");
+        }
+
+        botonEliminar.classList.add("eliminar-tarea");
+
+        spanTexto.addEventListener("click", function() {
+            nuevaTarea.classList.toggle("completada");
+            //Actualizar estado en el array de tareas
+            const index = Array.from(listaTareas.children).indexOf(nuevaTarea);
+            tareas[index].completada = !tareas[index].completada;
+            guardarTareas(); // Guardar cambios en el localStorage
+         });
+
+        botonEliminar.addEventListener("click", function() {
+            const index = Array.from(listaTareas.children).indexOf(nuevaTarea);
+            tareas.splice(index, 1); // Eliminar la tarea del array
+            listaTareas.removeChild(nuevaTarea); // Eliminar el <li> del DOM
+            guardarTareas(); // Guardar cambios en el localStorage
+        });
+
+        nuevaTarea.appendChild(spanTexto);
+        nuevaTarea.appendChild(botonEliminar);
+        listaTareas.appendChild(nuevaTarea);
+    }
+
+
     // Funcion para agregar una nueva tarea
     function agregarTarea() {
         const tareaTexto = inputTarea.value.trim();
 
         if (tareaTexto !== "") {
-            // Crear un nuevo elemento de lista
-            const nuevaTarea = document.createElement("li");
-            const tareaCompletada = document.createElement("button")
-            const eliminarTarea = document.createElement("button")
-
-            tareaCompletada.textContent = "✔️"
-            tareaCompletada.addEventListener("click", function() {
-                nuevaTarea.classList.toggle("text-decoration-line-through")
-            });
-
-            eliminarTarea.textContent = "🗑"
-            eliminarTarea.classList.add("eliminar-tarea")
-            eliminarTarea.addEventListener("click", function() {
-                listaTareas.removeChild(nuevaTarea);
-            });
-
-            nuevaTarea.textContent =tareaTexto + " - " + new Date().toLocaleString("es-ES", { timeZone: "America/Argentina/Buenos_Aires" });
-
-           
-
-            nuevaTarea.appendChild(tareaCompletada)
-            nuevaTarea.appendChild(eliminarTarea)
-
-            // agregar el <li> a la lista
-            listaTareas.appendChild(nuevaTarea);
-
-            // Limpiar el campo de entrada
-            inputTarea.value = "";
+            tareas.push({ texto: tareaTexto, completada: false }); // Agregar la tarea al array
+            guardarTareas(); // Guardar en el localStorage
+            crearElementoTarea(tareaTexto); // Crear el elemento en el DOM
+            inputTarea.value = ""; // Limpiar el campo de entrada
         } else {
             Swal.fire({
                 title: 'Error!',
@@ -52,4 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Cuando hagan click en el botón, ejecuta agregarTarea()
     agregarBtn.addEventListener("click", agregarTarea);
+
+    // Cargar tareas al iniciar la página
+    cargarTareas();
 });

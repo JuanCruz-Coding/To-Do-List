@@ -1,0 +1,10 @@
+.completada {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.eliminar-tarea{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
