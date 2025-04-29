@@ -18,6 +18,12 @@
             <input type="text" id="input-tarea" class="form-control col-auto" placeholder="Escribe una nueva tarea">
             <button id="agregar-btn" class="btn btn-primary mb-3 col-auto">Agregar</button>
         </div>
+
+        <div id="filtros" class="mt-3">
+            <button class="filtro-btn btn btn-secondary btn-sm" data-filtro="todas">Todas</button>
+            <button class="filtro-btn btn btn-secondary btn-sm" data-filtro="completadas">Completadas</button>
+            <button class="filtro-btn btn btn-secondary btn-sm" data-filtro="pendientes">Pendientes</button>
+        </div>
         
         <ol id="lista-tareas">
             <!-- Aquí se agregarán las tareas -->

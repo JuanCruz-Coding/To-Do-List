@@ -85,4 +85,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Cargar tareas al iniciar la página
     cargarTareas();
+
+    const botonesFiltro = document.querySelectorAll(".filtro-btn");
+
+    botonesFiltro.forEach(boton => {
+        boton.addEventListener("click", function() {
+            const filtro = this.getAttribute("data-filtro");
+            aplicarFiltro(filtro);
+        });
+    });
+
+    function aplicarFiltro(tipo){
+        const items = listaTareas.children;
+        for (let i = 0; i < items.length; i++) {
+            const li = items[i];
+            const estaCompletada = li.classList.contains("completada");
+
+            if (tipo === "todas") {
+                li.style.display = "";
+            } else if (tipo === "completadas") {
+                li.style.display = estaCompletada ? "" : "none";
+            } else if (tipo === "pendientes") {
+                li.style.display = !estaCompletada ? "" : "none";
+            }
+        }    
+    }
+
 });
