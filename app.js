@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 crearElementoTarea(tarea.texto, tarea.completada);
             });
         }
+        actualizarContador();
     }
 
     // Guardar tareas en el localStorage
@@ -46,6 +47,8 @@ document.addEventListener("DOMContentLoaded", function() {
             const index = Array.from(listaTareas.children).indexOf(nuevaTarea);
             tareas[index].completada = !tareas[index].completada;
             guardarTareas(); // Guardar cambios en el localStorage
+            actualizarContador();
+
          });
 
         botonEliminar.addEventListener("click", function() {
@@ -53,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
             tareas.splice(index, 1); // Eliminar la tarea del array
             listaTareas.removeChild(nuevaTarea); // Eliminar el <li> del DOM
             guardarTareas(); // Guardar cambios en el localStorage
+            actualizarContador();
         });
 
         nuevaTarea.appendChild(spanTexto);
@@ -68,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (tareaTexto !== "") {
             tareas.push({ texto: tareaTexto, completada: false }); // Agregar la tarea al array
             guardarTareas(); // Guardar en el localStorage
+            actualizarContador(); // Actualizar el contador de tareas
             crearElementoTarea(tareaTexto); // Crear el elemento en el DOM
             inputTarea.value = ""; // Limpiar el campo de entrada
         } else {
@@ -85,6 +90,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Cargar tareas al iniciar la página
     cargarTareas();
+    actualizarContador();
+
 
     const botonesFiltro = document.querySelectorAll(".filtro-btn");
 
@@ -111,4 +118,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }    
     }
 
+    function actualizarContador() {
+        const total = tareas.length;
+        const completadas = tareas.filter(tarea => tarea.completada).length;
+        const pendientes = total - completadas;
+
+        document.getElementById("total").textContent = total;
+        document.getElementById("completadas").textContent = completadas;
+        document.getElementById("pendientes").textContent = pendientes;
+    }
+
 });
+
