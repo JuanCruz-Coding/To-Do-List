@@ -58,11 +58,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             tarea.completada = !tarea.completada;
             tarea.completadaEn = tarea.completada ? new Date().toLocaleString() : null;
-            
+
             guardarTareas(); // Guardar cambios en el localStorage
             actualizarContador();
 
-             // Actualizar fechas visualmente
+            // Actualizar fechas visualmente
             infoFechas.innerHTML = `
             Creada: ${tarea.creada}
             ${tarea.vencimiento ? `<br>Vence: ${tarea.vencimiento}` : ""}
@@ -72,12 +72,26 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         botonEliminar.addEventListener("click", function () {
-            const index = Array.from(listaTareas.children).indexOf(nuevaTarea);
-            tareas.splice(index, 1); // Eliminar la tarea del array
-            listaTareas.removeChild(nuevaTarea); // Eliminar el <li> del DOM
-            guardarTareas(); // Guardar cambios en el localStorage
-            actualizarContador();
+            Swal.fire({
+                title: 'Estas seguro?',
+                text: 'Esta acción no se puede deshacer',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Si, eliminar',
+                cancelButtonText: 'No, cancelar',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const index = Array.from(listaTareas.children).indexOf(nuevaTarea);
+                    tareas.splice(index, 1); // Eliminar del array
+                    listaTareas.removeChild(nuevaTarea); // Eliminar del DOM
+                    guardarTareas();
+                    actualizarContador();
+                }
+            });
         });
+
 
         nuevaTarea.appendChild(spanTexto);
         nuevaTarea.appendChild(infoFechas); // Agregar la información de fechas al <li>
@@ -95,8 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
             tareas.push({ texto: tareaTexto, completada: false, creada: new Date().toLocaleString(), completadaEn: null, vencimiento: fechaLimite || null }); // Agregar la tarea al array
             guardarTareas(); // Guardar en el localStorage
             actualizarContador(); // Actualizar el contador de tareas
-            crearElementoTarea(tareaTexto, false, new Date().toLocaleString(), null, fechaLimite || null);
- // Crear el elemento en el DOM
+            crearElementoTarea(tareaTexto, false, new Date().toLocaleString(), null, fechaLimite || null); // Crear el elemento en el DOM
             inputTarea.value = ""; // Limpiar el campo de entrada
         } else {
             Swal.fire({
@@ -151,5 +164,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("pendientes").textContent = pendientes;
     }
 
+    
 });
 
